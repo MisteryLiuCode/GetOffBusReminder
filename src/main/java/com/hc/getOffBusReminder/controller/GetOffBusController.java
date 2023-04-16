@@ -23,23 +23,11 @@ public class GetOffBusController {
     @Autowired
     private IGlobalCache globalCache;
 
-    //    位置转码
-    @RequestMapping("/hello")
-    public ResponseEntity<AddressEncodeVO> addressEn() {
-        Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
-        RestTemplate restTemplate = ConfigUtil.getTemplate();
-        String resUrl = ConfigUtil.getAddressEncodeUrl(weatherConfig);
-        ResponseEntity<AddressEncodeVO> res = restTemplate.getForEntity(resUrl, AddressEncodeVO.class);
-        AddressEncodeVO addressEncodeVO = res.getBody();
-        log.info(addressEncodeVO.toString());
-        return res;
-    }
-
     //获取直线距离
     @GetMapping("/getDistance/{oriLong}/{oriLat}")
     @ResponseBody
     public long getDistance(@PathVariable String oriLong, @PathVariable String oriLat) {
-        log.info("入参:{},{}", oriLong, oriLat);
+        log.info("获取直线距离入参:{},{}", oriLong, oriLat);
         Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
         //起始经纬度
         String startPoint = oriLong + "," + oriLat;
@@ -49,7 +37,7 @@ public class GetOffBusController {
             return 0;
         }
         long distance = getDistance(startPoint, endPoint, weatherConfig);
-        if (distance < 1500 && !globalCache.hasKey("sendMessage")) {
+        if (distance < 1000 && !globalCache.hasKey("sendMessage")) {
             String url = "https://api.day.app/DMNK5oTh5FV3RvwpxKvxwB/马上到站了";//指定URL
             String result = HttpUtil.createGet(url).execute().body();
             log.info("发送通知结果：{}", result);
@@ -85,10 +73,9 @@ public class GetOffBusController {
     public String getLocation(@PathVariable String oriLong, @PathVariable String oriLat,@PathVariable String location) {
         log.info("保存上下班入参:{},{}", oriLong, oriLat,location);
         String point = oriLong + "," + oriLat;
-        LocationEnum locationEnum = LocationEnum.valueOf(location);
         try{
             //如果为上班位置
-            if(locationEnum.getCode().equals(LocationEnum.TYPE_1.getCode())){
+            if(location.equals(LocationEnum.TYPE_1.getCode())){
                 globalCache.set("work",point);
                 log.info("保存上班位置信息成功");
             }else {
@@ -124,7 +111,6 @@ public class GetOffBusController {
             endPoint = globalCache.get(LocationEnum.TYPE_1.getCode())==null?"":(String) globalCache.get(LocationEnum.TYPE_1.getCode());
         } else {
             //获取下班目的地经纬度
-
             endPoint =  globalCache.get(LocationEnum.TYPE_2.getCode())==null?"":(String) globalCache.get(LocationEnum.TYPE_2.getCode());
         }
         return endPoint;
@@ -140,28 +126,10 @@ public class GetOffBusController {
         String key = weatherConfig.getString("key");
         String queryUrl = "http://restapi.amap.com/v3/distance?key=" + key + "&origins=" + startLonLat + "&destination=" + endLonLat + "&type=0";
         String queryResult = HttpUtil.get(queryUrl);
-        //System.out.println(queryResult);
         JSONObject job = JSONObject.parseObject(queryResult);
         JSONArray ja = job.getJSONArray("results");
         JSONObject jobO = JSONObject.parseObject(ja.getString(0));
         result = Long.parseLong(jobO.get("distance").toString());
-        //System.out.println("距离："+result);
         return result;
     }
-
-
-//
-
-    //        RestTemplate restTemplate = ConfigUtil.getTemplate();
-//        String resUrl = ConfigUtil.getWalkingPlanUrl(weatherConfig, oriLong, oriLat);
-//        //当距离太远会查不到，抛出异常
-//        ResponseEntity<WalkingPlanVO> res = restTemplate.getForEntity(resUrl, WalkingPlanVO.class);
-//        WalkingPlanVO walkingPlanVO = res.getBody();
-//        Path path = walkingPlanVO.getRoute().getPaths().get(0);
-//        if (Integer.parseInt(path.getDistance()) < 100 && !falg) {
-//            String url = "https://api.day.app/DMNK5oTh5FV3RvwpxKvxwB/马上到站了";//指定URL
-//            String result = HttpUtil.createGet(url).execute().body();
-//            log.info("发送通知结果：{}", result);
-//            falg=true;
-//        }
 }
