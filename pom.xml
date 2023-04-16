@@ -11,8 +11,8 @@
     <groupId>com.hc</groupId>
     <artifactId>GetOffBusReminder</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>weather-mail</name>
-    <description>send weather mail</description>
+    <name>getOffBusReminder</name>
+    <description>Get off the bus reminder</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
