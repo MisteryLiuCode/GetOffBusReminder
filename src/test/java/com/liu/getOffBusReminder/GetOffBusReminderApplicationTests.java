@@ -1,11 +1,14 @@
 package com.liu.getOffBusReminder;
 
+import com.liu.getOffBusReminder.dao.UserInfoDao;
+import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
 import com.liu.getOffBusReminder.utils.IGlobalCache;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +19,9 @@ class GetOffBusReminderApplicationTests {
 
     @Autowired
     private IGlobalCache globalCache;
+
+    @Resource
+    private UserInfoDao userInfoDao;
 
     //比较当下时间是上午还是下午
     @Test
@@ -41,5 +47,16 @@ class GetOffBusReminderApplicationTests {
         globalCache.lSetAll("list", Arrays.asList("hello", "redis"));
         List<Object> list = globalCache.lGet("list", 0, -1);
         System.out.println(globalCache.get("key2"));
+    }
+
+    /**
+     * 数据插入测试
+     */
+    @Test
+    public void dataInsertTest(){
+        UserInfoDO userInfoDO = new UserInfoDO();
+        userInfoDO.setUser_id("1111");
+        int insert = userInfoDao.insert(userInfoDO);
+        log.info("插入数据结果:{}",insert);
     }
 }
