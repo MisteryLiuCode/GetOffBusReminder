@@ -21,7 +21,7 @@ public class ConfigUtil {
     public static Configuration getHeFengWeatherConfig() {
         if (configuration == null) {
             try {
-                configuration = new PropertiesConfiguration(ProjectConstant.HEFENGWEATHERMAIL_CONFIG);
+                configuration = new PropertiesConfiguration(ProjectConstant.GETOFFREMINDER_CONFIG);
             } catch (ConfigurationException e) {
                 log.error("获取配置文件异常！" + e.getMessage());
                 return null;

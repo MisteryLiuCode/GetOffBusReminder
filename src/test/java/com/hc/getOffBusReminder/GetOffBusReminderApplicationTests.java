@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @SpringBootTest
-class WeatherMailApplicationTests {
+class GetOffBusReminderApplicationTests {
 
     @Autowired
     private IGlobalCache globalCache;
