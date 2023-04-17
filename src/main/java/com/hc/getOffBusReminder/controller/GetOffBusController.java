@@ -16,6 +16,14 @@ public class GetOffBusController {
     @Resource
     private GetOffBusService getOffBusService;
 
+
+    @GetMapping("/saveUserInfo/{userId}")
+    @ResponseBody
+    public Boolean saveUserInfo(@PathVariable String userId) {
+//        return getOffBusService.getDistance(userId);
+        return true;
+    }
+
     /**
      * 获取直线距离
      * @param oriLong
