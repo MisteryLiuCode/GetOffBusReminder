@@ -1,10 +1,8 @@
-package com.hc.getOffBusReminder.controller;
+package com.liu.getOffBusReminder.controller;
 
 
-import com.hc.getOffBusReminder.service.GetOffBusService;
-import com.hc.getOffBusReminder.utils.IGlobalCache;
+import com.liu.getOffBusReminder.service.GetOffBusService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 

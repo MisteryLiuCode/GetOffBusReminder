@@ -1,4 +1,4 @@
-package com.hc.getOffBusReminder.annotation;
+package com.liu.getOffBusReminder.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

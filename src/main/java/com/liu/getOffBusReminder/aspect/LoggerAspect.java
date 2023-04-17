@@ -1,4 +1,4 @@
-package com.hc.getOffBusReminder.aspect;
+package com.liu.getOffBusReminder.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -23,7 +23,7 @@ public class LoggerAspect {
     /**
      * 以注解作为切点切入
      */
-    @Pointcut("@annotation(com.hc.getOffBusReminder.annotation.PrintLog)")
+    @Pointcut("@annotation(com.liu.getOffBusReminder.annotation.PrintLog)")
     public void logPoint() {
 
     }

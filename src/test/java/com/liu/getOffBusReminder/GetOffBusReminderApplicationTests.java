@@ -1,6 +1,6 @@
-package com.hc.getOffBusReminder;
+package com.liu.getOffBusReminder;
 
-import com.hc.getOffBusReminder.utils.IGlobalCache;
+import com.liu.getOffBusReminder.utils.IGlobalCache;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

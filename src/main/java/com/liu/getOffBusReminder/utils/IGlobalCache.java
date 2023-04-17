@@ -1,4 +1,4 @@
-package com.hc.getOffBusReminder.utils;
+package com.liu.getOffBusReminder.utils;
 
 import org.springframework.data.redis.core.RedisTemplate;
 

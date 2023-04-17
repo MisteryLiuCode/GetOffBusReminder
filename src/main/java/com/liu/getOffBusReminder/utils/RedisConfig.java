@@ -1,4 +1,4 @@
-package com.hc.getOffBusReminder.utils;
+package com.liu.getOffBusReminder.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

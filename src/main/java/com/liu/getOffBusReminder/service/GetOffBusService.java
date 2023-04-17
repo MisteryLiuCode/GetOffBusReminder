@@ -1,10 +1,10 @@
-package com.hc.getOffBusReminder.service;
+package com.liu.getOffBusReminder.service;
 
 import cn.hutool.http.HttpUtil;
-import com.hc.getOffBusReminder.enums.LocationEnum;
-import com.hc.getOffBusReminder.helper.GetOffBusHelper;
-import com.hc.getOffBusReminder.utils.ConfigUtil;
-import com.hc.getOffBusReminder.utils.IGlobalCache;
+import com.liu.getOffBusReminder.enums.LocationEnum;
+import com.liu.getOffBusReminder.helper.GetOffBusHelper;
+import com.liu.getOffBusReminder.utils.ConfigUtil;
+import com.liu.getOffBusReminder.utils.IGlobalCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;

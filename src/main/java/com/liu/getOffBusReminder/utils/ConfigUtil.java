@@ -1,7 +1,7 @@
-package com.hc.getOffBusReminder.utils;
+package com.liu.getOffBusReminder.utils;
 
 
-import com.hc.getOffBusReminder.entity.ProjectConstant;
+import com.liu.getOffBusReminder.entity.ProjectConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;

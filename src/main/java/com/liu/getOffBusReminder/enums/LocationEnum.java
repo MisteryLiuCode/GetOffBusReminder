@@ -1,4 +1,4 @@
-package com.hc.getOffBusReminder.enums;
+package com.liu.getOffBusReminder.enums;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package com.hc.getOffBusReminder.helper;
+package com.liu.getOffBusReminder.helper;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hc.getOffBusReminder.enums.LocationEnum;
-import com.hc.getOffBusReminder.utils.IGlobalCache;
+import com.liu.getOffBusReminder.enums.LocationEnum;
+import com.liu.getOffBusReminder.utils.IGlobalCache;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
