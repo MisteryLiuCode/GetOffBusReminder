@@ -61,7 +61,7 @@ public class GetOffBusService {
             return 0;
         }
         long distance = getOffBusHelper.getDistance(startPoint, endPoint,weatherConfig);
-        if (distance < 1000 && !globalCache.hasKey("sendMessage")) {
+        if (distance < 1500 && !globalCache.hasKey("sendMessage")) {
             String url = "https://api.day.app/DMNK5oTh5FV3RvwpxKvxwB/马上到站了";//指定URL
             String result = HttpUtil.createGet(url).execute().body();
             log.info("发送通知结果：{}", result);

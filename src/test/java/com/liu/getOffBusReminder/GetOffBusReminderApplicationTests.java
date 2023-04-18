@@ -57,7 +57,7 @@ class GetOffBusReminderApplicationTests {
 //        UserInfoDO userInfoDO = new UserInfoDO();
 //        userInfoDO.setUser_id("1111");
 //        int insert = userInfoDao.insert(userInfoDO);
-        UserInfoDO userInfoDO = userInfoMapper.queryById("1");
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId("1");
         log.info("插入数据结果:{}",userInfoDO);
     }
 }

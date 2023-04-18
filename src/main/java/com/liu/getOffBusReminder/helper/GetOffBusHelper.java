@@ -56,15 +56,14 @@ public class GetOffBusHelper {
         //判断现在时间是上午还是下午，true为上午，false为下午
         Boolean isAm = des();
         String endPoint = "";
+        String s = "";
         UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
         if (isAm) {
             //获取上班目的地经纬度
-            String workDes = userInfoDO.getWorkDes();
-            endPoint=workDes.equals("")==true?"":workDes;
+            endPoint=userInfoDO.getWorkDes()==null?"":userInfoDO.getWorkDes();
         } else {
             //获取下班目的地经纬度
-            String homeDes = userInfoDO.getHomeDes();
-            endPoint=homeDes.equals("")==true?"":homeDes;
+            endPoint=userInfoDO.getHomeDes()==null?"":userInfoDO.getHomeDes();
         }
         return endPoint;
     }
