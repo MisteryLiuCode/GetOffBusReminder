@@ -3,12 +3,18 @@ package com.liu.getOffBusReminder.helper;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.liu.getOffBusReminder.dao.UserInfoMapper;
+import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.utils.IGlobalCache;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * @author liushuaibiao
@@ -20,6 +26,9 @@ public class GetOffBusHelper {
 
     @Autowired
     private IGlobalCache globalCache;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
 
     /**
@@ -43,16 +52,19 @@ public class GetOffBusHelper {
      * 上午目的地为上班地铁站，下午目的为下班地铁站
      * @return
      */
-    public String getEndPoint() {
+    public String getEndPoint(String userId) {
         //判断现在时间是上午还是下午，true为上午，false为下午
         Boolean isAm = des();
         String endPoint = "";
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
         if (isAm) {
             //获取上班目的地经纬度
-            endPoint = globalCache.get(LocationEnum.TYPE_1.getCode())==null?"":(String) globalCache.get(LocationEnum.TYPE_1.getCode());
+            String workDes = userInfoDO.getWorkDes();
+            endPoint=workDes.equals("")==true?"":workDes;
         } else {
             //获取下班目的地经纬度
-            endPoint =  globalCache.get(LocationEnum.TYPE_2.getCode())==null?"":(String) globalCache.get(LocationEnum.TYPE_2.getCode());
+            String homeDes = userInfoDO.getHomeDes();
+            endPoint=homeDes.equals("")==true?"":homeDes;
         }
         return endPoint;
     }
@@ -74,4 +86,11 @@ public class GetOffBusHelper {
         return result;
     }
 
+    public String getTime(){
+        SimpleDateFormat sdf = new SimpleDateFormat();// 格式化时间
+        sdf.applyPattern("yyyy-MM-dd HH:mm");// a为am/pm的标记
+        Date date = new Date();// 获取当前时间
+        String format = sdf.format(date);
+        return format;
+    }
 }

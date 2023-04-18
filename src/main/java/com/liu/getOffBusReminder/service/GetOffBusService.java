@@ -1,6 +1,8 @@
 package com.liu.getOffBusReminder.service;
 
 import cn.hutool.http.HttpUtil;
+import com.liu.getOffBusReminder.dao.UserInfoMapper;
+import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.helper.GetOffBusHelper;
 import com.liu.getOffBusReminder.utils.ConfigUtil;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
+import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * @author liushuaibiao
@@ -27,13 +31,32 @@ public class GetOffBusService {
     @Autowired
     private IGlobalCache globalCache;
 
-    public long getDistance(@PathVariable String oriLong, @PathVariable String oriLat) {
+    @Resource
+    private UserInfoMapper userInfoMapper;
+
+    public String saveUser(String userId){
+        log.info("保存用户:{}",userId);
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
+        if (userInfoDO==null){
+            userInfoDO=new UserInfoDO();
+            userInfoDO.setUserId(userId);
+            userInfoDO.setYn(1);
+            String time = getOffBusHelper.getTime();
+            userInfoDO.setAddTime(time);
+            log.info("用户入库开始");
+            int insert = userInfoMapper.insert(userInfoDO);
+            return insert==1?"success":"fail";
+        }
+        return "success";
+    }
+
+    public long getDistance(String oriLong,String oriLat,String userId) {
         log.info("获取直线距离入参:{},{}", oriLong, oriLat);
         Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
         //起始经纬度
         String startPoint = oriLong + "," + oriLat;
         //获取目的地经纬度
-        String endPoint = getOffBusHelper.getEndPoint();
+        String endPoint = getOffBusHelper.getEndPoint(userId);
         if (endPoint.equals("")) {
             return 0;
         }
@@ -65,16 +88,24 @@ public class GetOffBusService {
         return des;
     }
 
-    public String getLocation(@PathVariable String oriLong, @PathVariable String oriLat,@PathVariable String location) {
-        log.info("保存上下班入参:{},{}", oriLong, oriLat,location);
+    public String getLocation(String oriLong, String oriLat, String location, String userId) {
+        log.info("保存上下班入参:{},{},{},{}", oriLong, oriLat,location,userId);
         String point = oriLong + "," + oriLat;
         try{
+            UserInfoDO userInfoDO = new UserInfoDO();
+            String time = getOffBusHelper.getTime();
             //如果为上班位置
             if(location.equals(LocationEnum.TYPE_1.getCode())){
-                globalCache.set("work",point);
+                userInfoDO.setWorkDes(point);
+                userInfoDO.setUserId(userId);
+                userInfoDO.setUpdateTime(time);
+                userInfoMapper.update(userInfoDO);
                 log.info("保存上班位置信息成功");
             }else {
-                globalCache.set("home",point);
+                userInfoDO.setHomeDes(point);
+                userInfoDO.setUserId(userId);
+                userInfoDO.setUpdateTime(time);
+                userInfoMapper.update(userInfoDO);
                 log.info("保存家位置信息成功");
             }
             return "success";

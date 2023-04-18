@@ -13,15 +13,15 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface UserInfoDao {
+public interface UserInfoMapper {
 
     /**
      * 通过ID查询单条数据
      *
-     * @param id 主键
+     * @param userId 主键
      * @return 实例对象
      */
-    UserInfoDO queryById(Integer id);
+    UserInfoDO queryByUserId(String userId);
 
     /**
      * 查询指定行数据

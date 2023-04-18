@@ -1,6 +1,6 @@
 package com.liu.getOffBusReminder;
 
-import com.liu.getOffBusReminder.dao.UserInfoDao;
+import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
 import com.liu.getOffBusReminder.utils.IGlobalCache;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ class GetOffBusReminderApplicationTests {
     private IGlobalCache globalCache;
 
     @Resource
-    private UserInfoDao userInfoDao;
+    private UserInfoMapper userInfoMapper;
 
     //比较当下时间是上午还是下午
     @Test
@@ -54,9 +54,10 @@ class GetOffBusReminderApplicationTests {
      */
     @Test
     public void dataInsertTest(){
-        UserInfoDO userInfoDO = new UserInfoDO();
-        userInfoDO.setUser_id("1111");
-        int insert = userInfoDao.insert(userInfoDO);
-        log.info("插入数据结果:{}",insert);
+//        UserInfoDO userInfoDO = new UserInfoDO();
+//        userInfoDO.setUser_id("1111");
+//        int insert = userInfoDao.insert(userInfoDO);
+        UserInfoDO userInfoDO = userInfoMapper.queryById("1");
+        log.info("插入数据结果:{}",userInfoDO);
     }
 }

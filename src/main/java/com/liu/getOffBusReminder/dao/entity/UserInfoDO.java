@@ -1,6 +1,8 @@
 package com.liu.getOffBusReminder.dao.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -15,35 +17,35 @@ public class UserInfoDO {
     /**
      * 唯一标识用户编号
      */
-    private String user_id;
+    private String userId;
     /**
      * 上班中文描述
      */
-    private String work_des_cn;
+    private String workDesCn;
     /**
      * 家位置中文描述
      */
-    private String home_des_cn;
+    private String homeDesCn;
 
     /**
      * 上班经纬度信息
      */
-    private String work_des;
+    private String workDes;
 
     /**
      * 家位置经纬度信息
      */
-    private String home_des;
+    private String homeDes;
 
     /**
      * 添加时间
      */
-    private Date add_time;
+    private String addTime;
 
     /**
      * 修改时间
      */
-    private Date update_time;
+    private String updateTime;
 
     /**
      * 是否有效  (0否 1是)
