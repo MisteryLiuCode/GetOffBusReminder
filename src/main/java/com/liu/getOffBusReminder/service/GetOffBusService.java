@@ -1,8 +1,11 @@
 package com.liu.getOffBusReminder.service;
 
 import cn.hutool.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
+import com.liu.getOffBusReminder.entity.Root;
+import com.liu.getOffBusReminder.entity.Tips;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.helper.GetOffBusHelper;
 import com.liu.getOffBusReminder.utils.ConfigUtil;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.annotation.Resource;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author liushuaibiao
@@ -114,4 +118,14 @@ public class GetOffBusService {
         }
     }
 
+
+    public List<String> inputPrompt(String oriLong, String oriLat,String keywords) {
+        log.info("输入提示入参:{},{},{},{}", oriLong, oriLat,keywords);
+        Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
+        //我的位置经纬度
+        String myPoint = oriLong + "," + oriLat;
+        List<String> nameList = getOffBusHelper.getInputPrompt(myPoint,keywords,weatherConfig);
+        log.info("获取输入提示结果:{}", JSON.toJSONString(nameList));
+        return nameList;
+    }
 }

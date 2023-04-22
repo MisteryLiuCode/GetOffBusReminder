@@ -5,6 +5,7 @@ import com.liu.getOffBusReminder.service.GetOffBusService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @RestController
@@ -14,6 +15,12 @@ public class GetOffBusController {
     @Resource
     private GetOffBusService getOffBusService;
 
+
+    @GetMapping("/test")
+    @ResponseBody
+    public String test(){
+        return "success";
+    }
 
     /**
      * 保存用户,第一次打开的时候保存用户基本信息
@@ -62,6 +69,17 @@ public class GetOffBusController {
                                @PathVariable String location,
                                @PathVariable String userId) {
         return getOffBusService.getLocation(oriLong,oriLat,location,userId);
+    }
+
+    /**
+     * 输入提示
+     */
+    @GetMapping("/inputPrompt/{oriLong}/{oriLat}/{keywords}")
+    @ResponseBody
+    public List<String> inputPrompt(@PathVariable String oriLong,
+                                    @PathVariable String oriLat,
+                                    @PathVariable String keywords){
+        return getOffBusService.inputPrompt(oriLong,oriLat,keywords);
     }
 
 }

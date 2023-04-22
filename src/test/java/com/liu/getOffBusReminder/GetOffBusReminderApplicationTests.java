@@ -2,6 +2,7 @@ package com.liu.getOffBusReminder;
 
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
+import com.liu.getOffBusReminder.service.GetOffBusService;
 import com.liu.getOffBusReminder.utils.IGlobalCache;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,9 @@ class GetOffBusReminderApplicationTests {
 
     @Autowired
     private IGlobalCache globalCache;
+
+    @Autowired
+    private GetOffBusService getOffBusService;
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -59,5 +63,13 @@ class GetOffBusReminderApplicationTests {
 //        int insert = userInfoDao.insert(userInfoDO);
         UserInfoDO userInfoDO = userInfoMapper.queryByUserId("1");
         log.info("插入数据结果:{}",userInfoDO);
+    }
+
+    /**
+     * 调用输入提示接口
+     */
+    @Test
+    public void inputPrompt(){
+        getOffBusService.inputPrompt("116.38974090824217","39.9364888775626","回龙观");
     }
 }

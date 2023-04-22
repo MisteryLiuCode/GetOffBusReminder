@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
+import com.liu.getOffBusReminder.entity.Root;
+import com.liu.getOffBusReminder.entity.Tips;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.utils.IGlobalCache;
 import org.apache.commons.configuration.Configuration;
@@ -14,7 +16,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author liushuaibiao
@@ -83,6 +88,19 @@ public class GetOffBusHelper {
         JSONObject jobO = JSONObject.parseObject(ja.getString(0));
         result = Long.parseLong(jobO.get("distance").toString());
         return result;
+    }
+
+
+    public List<String> getInputPrompt(String myPoint, String keywords, Configuration weatherConfig) {
+        //返回起始地startAddr与目的地endAddr之间的距离，单位：米
+        String inputPromptUrl = weatherConfig.getString("inputPromptUrl");
+        String key = weatherConfig.getString("key");
+        String queryUrl = inputPromptUrl+"?key=" + key + "&keywords=" + keywords + "&location=" + myPoint + "&datatype=bus";
+        String queryResult = HttpUtil.get(queryUrl);
+        Root root = JSONObject.parseObject(queryResult, Root.class);
+        List<Tips> tipsList = root.getTips();
+        List<String> nameList = tipsList.stream().map(Tips::getName).collect(Collectors.toList());
+        return nameList;
     }
 
     public String getTime(){
