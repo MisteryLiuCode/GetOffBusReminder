@@ -2,10 +2,10 @@ package com.liu.getOffBusReminder.service;
 
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
-import com.liu.getOffBusReminder.entity.Root;
-import com.liu.getOffBusReminder.entity.Tips;
+import com.liu.getOffBusReminder.entity.user.UserReq;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.helper.GetOffBusHelper;
 import com.liu.getOffBusReminder.utils.ConfigUtil;
@@ -14,11 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.Resource;
-import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,23 +35,23 @@ public class GetOffBusService {
     @Resource
     private UserInfoMapper userInfoMapper;
 
-    public String saveUser(String userId){
-        log.info("保存用户:{}",userId);
-        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
+    public Boolean saveUser(UserReq userReq){
+        log.info("保存用户:{}", JSONObject.toJSONString(userReq));
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userReq.getUserId());
         if (userInfoDO==null){
             userInfoDO=new UserInfoDO();
-            userInfoDO.setUserId(userId);
+            userInfoDO.setUserId(userReq.getUserId());
             userInfoDO.setYn(1);
             String time = getOffBusHelper.getTime();
             userInfoDO.setAddTime(time);
             log.info("用户入库开始");
             int insert = userInfoMapper.insert(userInfoDO);
-            return insert==1?"success":"fail";
+            return insert==1?true:false;
         }
-        return "success";
+        return true;
     }
 
-    public long getDistance(String oriLong,String oriLat,String userId) {
+    public Double getDistance(String oriLong, String oriLat, String userId) {
         log.info("获取直线距离入参:{},{}", oriLong, oriLat);
         Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
         //起始经纬度
@@ -62,9 +59,9 @@ public class GetOffBusService {
         //获取目的地经纬度
         String endPoint = getOffBusHelper.getEndPoint(userId);
         if (endPoint.equals("")) {
-            return 0;
+            return Double.valueOf(0);
         }
-        long distance = getOffBusHelper.getDistance(startPoint, endPoint,weatherConfig);
+        Double distance = getOffBusHelper.getDistance(startPoint, endPoint,weatherConfig);
         if (distance < 1500 && !globalCache.hasKey("sendMessage")) {
             String url = "https://api.day.app/DMNK5oTh5FV3RvwpxKvxwB/马上到站了";//指定URL
             String result = HttpUtil.createGet(url).execute().body();

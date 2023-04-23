@@ -77,16 +77,16 @@ public class GetOffBusHelper {
     /**
      * 经纬度算出两点间距离（通过api调用计算）
      */
-    public long getDistance(String startLonLat, String endLonLat, Configuration weatherConfig) {
+    public Double getDistance(String startLonLat, String endLonLat, Configuration weatherConfig) {
         //返回起始地startAddr与目的地endAddr之间的距离，单位：米
-        Long result = new Long(0);
+        Double result = new Double(0);
         String key = weatherConfig.getString("key");
         String queryUrl = "http://restapi.amap.com/v3/distance?key=" + key + "&origins=" + startLonLat + "&destination=" + endLonLat + "&type=0";
         String queryResult = HttpUtil.get(queryUrl);
         JSONObject job = JSONObject.parseObject(queryResult);
         JSONArray ja = job.getJSONArray("results");
         JSONObject jobO = JSONObject.parseObject(ja.getString(0));
-        result = Long.parseLong(jobO.get("distance").toString());
+        result = Double.parseDouble(jobO.get("distance").toString());
         return result;
     }
 
