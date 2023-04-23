@@ -81,7 +81,8 @@ public class GetOffBusHelper {
         //返回起始地startAddr与目的地endAddr之间的距离，单位：米
         Long result = new Long(0);
         String key = weatherConfig.getString("key");
-        String queryUrl = "http://restapi.amap.com/v3/distance?key=" + key + "&origins=" + startLonLat + "&destination=" + endLonLat + "&type=0";
+        String distanceUrl = weatherConfig.getString("distanceUrl");
+        String queryUrl = distanceUrl+"?key=" + key + "&origins=" + startLonLat + "&destination=" + endLonLat + "&type=0";
         String queryResult = HttpUtil.get(queryUrl);
         JSONObject job = JSONObject.parseObject(queryResult);
         JSONArray ja = job.getJSONArray("results");

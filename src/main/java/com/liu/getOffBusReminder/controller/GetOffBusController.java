@@ -82,4 +82,12 @@ public class GetOffBusController {
         return getOffBusService.inputPrompt(oriLong,oriLat,keywords);
     }
 
+
+    @GetMapping("/getWorkAndHomeLocation/{location}/{userId}")
+    @ResponseBody
+    public String getWorkAndHomeLocation(@PathVariable String location,
+                                         @PathVariable String userId){
+        return getOffBusService.getWorkAndHomeLocation(location,userId);
+    }
+
 }

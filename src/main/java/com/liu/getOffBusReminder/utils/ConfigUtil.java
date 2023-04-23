@@ -43,20 +43,6 @@ public class ConfigUtil {
         restTemplate.getInterceptors().add(interceptor);
         return restTemplate;
     }
-    /**
-     * 获取地址编码url
-     * @return
-     */
-    public static String  getAddressEncodeUrl(Configuration weatherConfig) {
-        String addressEncodeUrl = weatherConfig.getString("addressEncodeUrl");
-        String key = weatherConfig.getString("key");
-        String goalAddress = weatherConfig.getString("goalAddress");
-        // 准备参数
-        String resUrl = addressEncodeUrl + "?" + "address=" + goalAddress +
-                "&" + "output=JSON" +
-                "&" + "key=" + key;
-        return resUrl;
-    }
 
     /**
      * 获取步行规划url
