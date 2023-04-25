@@ -18,7 +18,7 @@ public class ConfigUtil {
 
     private static Configuration configuration;
 
-    public static Configuration getHeFengWeatherConfig() {
+    public static Configuration getOffBusReminderConfig() {
         if (configuration == null) {
             try {
                 configuration = new PropertiesConfiguration(ProjectConstant.GETOFFREMINDER_CONFIG);

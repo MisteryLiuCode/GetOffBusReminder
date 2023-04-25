@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
-import com.liu.getOffBusReminder.entity.user.UserReq;
+import com.liu.getOffBusReminder.entity.req.DistanceReq;
+import com.liu.getOffBusReminder.entity.req.UserReq;
+import com.liu.getOffBusReminder.entity.req.WorkAndHomeLocationReq;
 import com.liu.getOffBusReminder.enums.LocationEnum;
 import com.liu.getOffBusReminder.helper.GetOffBusHelper;
 import com.liu.getOffBusReminder.utils.ConfigUtil;
@@ -14,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -51,13 +54,13 @@ public class GetOffBusService {
         return true;
     }
 
-    public Double getDistance(String oriLong, String oriLat, String userId) {
-        log.info("获取直线距离入参:{},{}", oriLong, oriLat);
-        Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
+    public Double getDistance(DistanceReq req) {
+        log.info("获取直线距离入参:{}", JSONObject.toJSONString(req));
+        Configuration weatherConfig = ConfigUtil.getOffBusReminderConfig();
         //起始经纬度
-        String startPoint = oriLong + "," + oriLat;
+        String startPoint = req.getOriLong() + "," + req.getOriLat();
         //获取目的地经纬度
-        String endPoint = getOffBusHelper.getEndPoint(userId);
+        String endPoint = getOffBusHelper.getEndPoint(req.getUserId());
         if (endPoint.equals("")) {
             return Double.valueOf(0);
         }
@@ -72,11 +75,11 @@ public class GetOffBusService {
         return distance;
     }
 
-    public String getDes() {
-        log.info("获取中文目的地开始");
+    public String getDes(UserReq req) {
+        log.info("获取中文目的地入参:{}",JSONObject.toJSONString(req));
         //判断现在时间是上午还是下午，true为上午，false为下午
         Boolean isAm = getOffBusHelper.des();
-        Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
+        Configuration weatherConfig = ConfigUtil.getOffBusReminderConfig();
         String des = "";
         if (isAm) {
             //获取上班目的地，中文
@@ -89,27 +92,25 @@ public class GetOffBusService {
         return des;
     }
 
-    public String getLocation(String oriLong, String oriLat, String location, String userId) {
-        log.info("保存上下班入参:{},{},{},{}", oriLong, oriLat,location,userId);
-        String point = oriLong + "," + oriLat;
+    @Transactional(rollbackFor = Exception.class)
+    public Integer getLocation(WorkAndHomeLocationReq req) {
+        log.info("保存上下班入参:{}", JSONObject.toJSONString(req));
+        String point = req.getOriLong() + "," + req.getOriLat();
         try{
             UserInfoDO userInfoDO = new UserInfoDO();
             String time = getOffBusHelper.getTime();
             //如果为上班位置
-            if(location.equals(LocationEnum.TYPE_1.getCode())){
+            if(req.getLocationType().equals(LocationEnum.TYPE_1.getCode())){
                 userInfoDO.setWorkDes(point);
-                userInfoDO.setUserId(userId);
+                userInfoDO.setUserId(req.getUserId());
                 userInfoDO.setUpdateTime(time);
-                userInfoMapper.update(userInfoDO);
-                log.info("保存上班位置信息成功");
+                return userInfoMapper.update(userInfoDO);
             }else {
                 userInfoDO.setHomeDes(point);
-                userInfoDO.setUserId(userId);
+                userInfoDO.setUserId(req.getUserId());
                 userInfoDO.setUpdateTime(time);
-                userInfoMapper.update(userInfoDO);
-                log.info("保存家位置信息成功");
+                return userInfoMapper.update(userInfoDO);
             }
-            return "success";
         }catch (Exception e){
             return "fail";
         }
@@ -130,14 +131,15 @@ public class GetOffBusService {
                 return homeDes;
             }
         }catch (Exception e){
-            return "fail";
+            e.printStackTrace();
+            return 0;
         }
     }
 
 
     public List<String> inputPrompt(String oriLong, String oriLat,String keywords) {
         log.info("输入提示入参:{},{},{},{}", oriLong, oriLat,keywords);
-        Configuration weatherConfig = ConfigUtil.getHeFengWeatherConfig();
+        Configuration weatherConfig = ConfigUtil.getOffBusReminderConfig();
         //我的位置经纬度
         String myPoint = oriLong + "," + oriLat;
         List<String> nameList = getOffBusHelper.getInputPrompt(myPoint,keywords,weatherConfig);

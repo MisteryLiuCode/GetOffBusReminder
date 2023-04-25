@@ -1,4 +1,4 @@
-package com.liu.getOffBusReminder.entity.user;
+package com.liu.getOffBusReminder.entity.req;
 
 import lombok.Data;
 
@@ -8,5 +8,7 @@ import lombok.Data;
  */
 @Data
 public class UserReq {
+
+
     private String userId;
 }

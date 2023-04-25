@@ -2,7 +2,9 @@ package com.liu.getOffBusReminder.controller;
 
 
 import com.liu.getOffBusReminder.common.RespResult;
-import com.liu.getOffBusReminder.entity.user.UserReq;
+import com.liu.getOffBusReminder.entity.req.DistanceReq;
+import com.liu.getOffBusReminder.entity.req.UserReq;
+import com.liu.getOffBusReminder.entity.req.WorkAndHomeLocationReq;
 import com.liu.getOffBusReminder.service.GetOffBusService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +28,9 @@ public class GetOffBusController {
 
     /**
      * 保存用户,第一次打开的时候保存用户基本信息
-     * @param userId
      * @return
      */
-    @GetMapping("/saveUserInfo/{userId}")
+    @GetMapping("/saveUserInfo")
     @ResponseBody
     public RespResult<Boolean> saveUserInfo(UserReq userReq) {
         return new RespResult<>(getOffBusService.saveUser(userReq));
@@ -37,14 +38,11 @@ public class GetOffBusController {
 
     /**
      * 获取直线距离
-     * @param oriLong
-     * @param oriLat
-     * @return
      */
-    @GetMapping("/getDistance/{oriLong}/{oriLat}/{userId}")
+    @RequestMapping("/getDistance")
     @ResponseBody
-    public long getDistance(@PathVariable String oriLong, @PathVariable String oriLat,@PathVariable String userId) {
-        return getOffBusService.getDistance(oriLong,oriLat,userId);
+    public RespResult<Double> getDistance(DistanceReq req) {
+        return new RespResult<>(getOffBusService.getDistance(req));
     }
 
     /**
@@ -53,43 +51,31 @@ public class GetOffBusController {
      */
     @RequestMapping("/getDestination")
     @ResponseBody
-    public RespResult<String> getDes() {
-        return new RespResult<>(getOffBusService.getDes());
+    public RespResult<String> getDes(UserReq req) {
+        return new RespResult<>(getOffBusService.getDes(req));
     }
 
     /**
      * 保存上下班位置信息
-     * @param oriLong
-     * @param oriLat
-     * @param location
-     * @return
      */
-    @GetMapping("/saveLocation/{oriLong}/{oriLat}/{location}/{userId}")
+    @RequestMapping("/saveLocation")
     @ResponseBody
-    public String saveLocation(@PathVariable String oriLong,
-                               @PathVariable String oriLat,
-                               @PathVariable String location,
-                               @PathVariable String userId) {
-        return getOffBusService.getLocation(oriLong,oriLat,location,userId);
+    public RespResult<Integer> saveLocation(WorkAndHomeLocationReq req) {
+        return new RespResult<>(getOffBusService.getLocation(req));
     }
 
     /**
      * 输入提示
      */
-    @GetMapping("/inputPrompt/{oriLong}/{oriLat}/{keywords}")
+    @RequestMapping("/inputPrompt/{oriLong}/{oriLat}/{keywords}")
     @ResponseBody
-    public List<String> inputPrompt(@PathVariable String oriLong,
-                                    @PathVariable String oriLat,
-                                    @PathVariable String keywords){
-        return getOffBusService.inputPrompt(oriLong,oriLat,keywords);
+    public RespResult<List<String>> inputPrompt(@PathVariable String oriLong,
+                                                @PathVariable String oriLat,
+                                                @PathVariable String keywords){
+        return new RespResult<>(getOffBusService.inputPrompt(oriLong, oriLat, keywords));
     }
 
 
-    @GetMapping("/getWorkAndHomeLocation/{location}/{userId}")
-    @ResponseBody
-    public String getWorkAndHomeLocation(@PathVariable String location,
-                                         @PathVariable String userId){
-        return getOffBusService.getWorkAndHomeLocation(location,userId);
-    }
+
 
 }
