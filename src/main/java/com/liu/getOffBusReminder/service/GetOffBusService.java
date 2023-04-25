@@ -115,6 +115,25 @@ public class GetOffBusService {
         }
     }
 
+    public String getWorkAndHomeLocation(String location,String userId) {
+        log.info("获取上下班位置信息入参:{},{}", location,userId);
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
+        try{
+            //如果为上班位置
+            if(location.equals(LocationEnum.TYPE_1.getCode())){
+                String workDes = userInfoDO.getWorkDes();
+                log.info("获取的上班位置{}",workDes);
+                return workDes;
+            }else {
+                String homeDes = userInfoDO.getHomeDes();
+                log.info("获取的下班位置{}",homeDes);
+                return homeDes;
+            }
+        }catch (Exception e){
+            return "fail";
+        }
+    }
+
 
     public List<String> inputPrompt(String oriLong, String oriLat,String keywords) {
         log.info("输入提示入参:{},{},{},{}", oriLong, oriLat,keywords);

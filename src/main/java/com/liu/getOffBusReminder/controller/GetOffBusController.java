@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/getOffBus")
 public class GetOffBusController {
 
     @Resource
@@ -27,6 +26,7 @@ public class GetOffBusController {
 
     /**
      * 保存用户,第一次打开的时候保存用户基本信息
+     * @param userId
      * @return
      */
     @GetMapping("/saveUserInfo/{userId}")
@@ -43,8 +43,8 @@ public class GetOffBusController {
      */
     @GetMapping("/getDistance/{oriLong}/{oriLat}/{userId}")
     @ResponseBody
-    public RespResult<Double> getDistance(@PathVariable String oriLong, @PathVariable String oriLat,@PathVariable String userId) {
-        return new RespResult<>(getOffBusService.getDistance(oriLong,oriLat,userId));
+    public long getDistance(@PathVariable String oriLong, @PathVariable String oriLat,@PathVariable String userId) {
+        return getOffBusService.getDistance(oriLong,oriLat,userId);
     }
 
     /**
@@ -64,27 +64,32 @@ public class GetOffBusController {
      * @param location
      * @return
      */
-    @RequestMapping("/saveLocation/{oriLong}/{oriLat}/{location}/{userId}")
+    @GetMapping("/saveLocation/{oriLong}/{oriLat}/{location}/{userId}")
     @ResponseBody
-    public RespResult<String> saveLocation(@PathVariable String oriLong,
+    public String saveLocation(@PathVariable String oriLong,
                                @PathVariable String oriLat,
                                @PathVariable String location,
                                @PathVariable String userId) {
-        return new RespResult<>(getOffBusService.getLocation(oriLong,oriLat,location,userId));
+        return getOffBusService.getLocation(oriLong,oriLat,location,userId);
     }
 
     /**
      * 输入提示
      */
-    @RequestMapping("/inputPrompt/{oriLong}/{oriLat}/{keywords}")
+    @GetMapping("/inputPrompt/{oriLong}/{oriLat}/{keywords}")
     @ResponseBody
-    public RespResult<List<String>> inputPrompt(@PathVariable String oriLong,
-                                                @PathVariable String oriLat,
-                                                @PathVariable String keywords){
-        return new RespResult<>(getOffBusService.inputPrompt(oriLong, oriLat, keywords));
+    public List<String> inputPrompt(@PathVariable String oriLong,
+                                    @PathVariable String oriLat,
+                                    @PathVariable String keywords){
+        return getOffBusService.inputPrompt(oriLong,oriLat,keywords);
     }
 
 
-
+    @GetMapping("/getWorkAndHomeLocation/{location}/{userId}")
+    @ResponseBody
+    public String getWorkAndHomeLocation(@PathVariable String location,
+                                         @PathVariable String userId){
+        return getOffBusService.getWorkAndHomeLocation(location,userId);
+    }
 
 }
