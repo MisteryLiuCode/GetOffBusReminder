@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.liu.getOffBusReminder.dao.UserInfoMapper;
 import com.liu.getOffBusReminder.dao.entity.UserInfoDO;
 import com.liu.getOffBusReminder.entity.req.DistanceReq;
+import com.liu.getOffBusReminder.entity.req.LocationReq;
 import com.liu.getOffBusReminder.entity.req.UserReq;
 import com.liu.getOffBusReminder.entity.req.WorkAndHomeLocationReq;
 import com.liu.getOffBusReminder.enums.LocationEnum;
@@ -112,16 +113,17 @@ public class GetOffBusService {
                 return userInfoMapper.update(userInfoDO);
             }
         }catch (Exception e){
-            return "fail";
+            e.printStackTrace();
         }
+        return 0;
     }
 
-    public String getWorkAndHomeLocation(String location,String userId) {
-        log.info("获取上下班位置信息入参:{},{}", location,userId);
-        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(userId);
+    public String getWorkAndHomeLocation(LocationReq req) {
+        log.info("获取上下班位置信息入参:{}", JSONObject.toJSONString(req));
+        UserInfoDO userInfoDO = userInfoMapper.queryByUserId(req.getUserId());
         try{
             //如果为上班位置
-            if(location.equals(LocationEnum.TYPE_1.getCode())){
+            if(req.getLocationType().equals(LocationEnum.TYPE_1.getCode())){
                 String workDes = userInfoDO.getWorkDes();
                 log.info("获取的上班位置{}",workDes);
                 return workDes;
@@ -132,7 +134,7 @@ public class GetOffBusService {
             }
         }catch (Exception e){
             e.printStackTrace();
-            return 0;
+            return "";
         }
     }
 
